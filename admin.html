@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I Love Quran - Admin Panel</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-color: #8b7355;
+        --secondary-color: #6b5d4f;
+        --bg-color: #f5f1e8;
+        --card-bg: rgba(255, 255, 255, 0.95);
+        --text-primary: #2d2520;
+        --text-muted: #6b5d4f;
+        --border-color: rgba(139, 115, 85, 0.2);
+        --success-color: #10b981;
+        --error-color: #ef4444;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        min-height: 100vh;
+        color: var(--text-primary);
+      }
+
+      /* Login Page Styles */
+      .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+      }
+
+      .login-card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        padding: 3rem;
+        max-width: 450px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      .login-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .login-header h1 {
+        font-size: 2rem;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .login-header p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: white;
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(139, 115, 85, 0.1);
+      }
+
+      .btn-primary {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        background: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .message {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        display: none;
+      }
+
+      .message.success {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-color);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+
+      .message.error {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--error-color);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+      }
+
+      .message.loading {
+        background: rgba(139, 115, 85, 0.1);
+        color: var(--primary-color);
+        border: 1px solid var(--border-color);
+      }
+
+      /* Dashboard Styles */
+      .dashboard-container {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        display: none;
+      }
+
+      .dashboard-header {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .dashboard-header h1 {
+        font-size: 2rem;
+        color: var(--text-primary);
+      }
+
+      .dashboard-header p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+      }
+
+      .btn-logout {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-primary);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .btn-logout:hover {
+        background: rgba(239, 68, 68, 0.1);
+        border-color: rgba(239, 68, 68, 0.3);
+        color: var(--error-color);
+      }
+
+      .dashboard-controls {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .search-box {
+        flex: 1;
+        min-width: 250px;
+      }
+
+      .search-input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: white;
+        color: var(--text-primary);
+        font-size: 0.95rem;
+      }
+
+      .stats-box {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 1.5rem;
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+      }
+
+      .stat-label {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      .stat-value {
+        color: var(--primary-color);
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+
+      .submissions-container {
+        background: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .submissions-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .submissions-table thead {
+        background: rgba(139, 115, 85, 0.1);
+      }
+
+      .submissions-table th {
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        color: var(--text-primary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--border-color);
+      }
+
+      .submissions-table td {
+        padding: 1rem;
+        border-bottom: 1px solid var(--border-color);
+        color: var(--text-primary);
+        font-size: 0.95rem;
+      }
+
+      .submissions-table tbody tr {
+        transition: background 0.2s ease;
+      }
+
+      .submissions-table tbody tr:hover {
+        background: rgba(139, 115, 85, 0.05);
+      }
+
+      .rating-stars {
+        color: #fbbf24;
+        font-size: 1rem;
+      }
+
+      .message-cell {
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .message-cell:hover {
+        white-space: normal;
+        overflow: visible;
+      }
+
+      .date-cell {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+      }
+
+      .no-submissions {
+        text-align: center;
+        padding: 3rem;
+        color: var(--text-muted);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (max-width: 768px) {
+        .login-card {
+          padding: 2rem;
+        }
+
+        .dashboard-container {
+          padding: 1rem;
+        }
+
+        .dashboard-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .dashboard-controls {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .submissions-table {
+          font-size: 0.85rem;
+        }
+
+        .submissions-table th,
+        .submissions-table td {
+          padding: 0.75rem 0.5rem;
+        }
+
+        .message-cell {
+          max-width: 150px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+      <div class="login-card">
+        <div class="login-header">
+          <h1>🕌 Admin Panel</h1>
+          <p>I Love Quran - Contact Submissions</p>
+        </div>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter username"
+              required
+              autocomplete="username"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter password"
+              required
+              autocomplete="current-password"
+            />
+          </div>
+
+          <button type="submit" class="btn-primary" id="loginBtn">Login</button>
+        </form>
+
+        <div id="loginMessage" class="message"></div>
+      </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="dashboard-container">
+      <div class="dashboard-header">
+        <div>
+          <h1>📊 Admin Dashboard</h1>
+          <p>Contact Form Submissions</p>
+        </div>
+        <button id="logoutBtn" class="btn-logout">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Logout
+        </button>
+      </div>
+
+      <div class="dashboard-controls">
+        <div class="search-box">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="🔍 Search by name, email, or message..."
+            class="search-input"
+          />
+        </div>
+        <div class="stats-box">
+          <span class="stat-label">Total Submissions:</span>
+          <span id="totalCount" class="stat-value">0</span>
+        </div>
+      </div>
+
+      <div id="submissionsContainer" class="submissions-container">
+        <!-- Submissions will be loaded here -->
+      </div>
+
+      <div id="dashboardMessage" class="message"></div>
+    </div>
+
+    <script>
+      // Configuration - UPDATE THIS WITH YOUR API URL
+      const API_URL = "http://localhost:3000"; // Change this to your production API URL
+
+      // State
+      let authToken = sessionStorage.getItem("adminToken");
+      let allSubmissions = [];
+
+      // DOM Elements
+      const loginPage = document.getElementById("loginPage");
+      const dashboardPage = document.getElementById("dashboardPage");
+      const loginForm = document.getElementById("loginForm");
+      const loginMessage = document.getElementById("loginMessage");
+      const loginBtn = document.getElementById("loginBtn");
+      const logoutBtn = document.getElementById("logoutBtn");
+      const searchInput = document.getElementById("searchInput");
+      const totalCount = document.getElementById("totalCount");
+      const submissionsContainer = document.getElementById(
+        "submissionsContainer",
+      );
+      const dashboardMessage = document.getElementById("dashboardMessage");
+
+      // Initialize
+      init();
+
+      function init() {
+        if (authToken) {
+          showDashboard();
+          loadSubmissions();
+        } else {
+          showLogin();
+        }
+      }
+
+      function showLogin() {
+        loginPage.classList.remove("hidden");
+        dashboardPage.classList.add("hidden");
+      }
+
+      function showDashboard() {
+        loginPage.classList.add("hidden");
+        dashboardPage.classList.remove("hidden");
+      }
+
+      function showMessage(element, text, type) {
+        element.textContent = text;
+        element.className = `message ${type}`;
+        element.style.display = "block";
+      }
+
+      function hideMessage(element) {
+        element.style.display = "none";
+      }
+
+      // Login Handler
+      loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        loginBtn.disabled = true;
+        showMessage(loginMessage, "🔐 Authenticating...", "loading");
+
+        try {
+          const response = await fetch(`${API_URL}/api/admin/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            authToken = result.token;
+            sessionStorage.setItem("adminToken", authToken);
+
+            showMessage(
+              loginMessage,
+              "✅ Login successful! Redirecting...",
+              "success",
+            );
+
+            setTimeout(() => {
+              showDashboard();
+              loadSubmissions();
+              loginForm.reset();
+              hideMessage(loginMessage);
+            }, 1000);
+          } else {
+            showMessage(loginMessage, `❌ ${result.message}`, "error");
+          }
+        } catch (error) {
+          console.error("Login error:", error);
+          showMessage(
+            loginMessage,
+            "❌ Login failed. Please check your connection.",
+            "error",
+          );
+        } finally {
+          loginBtn.disabled = false;
+        }
+      });
+
+      // Logout Handler
+      logoutBtn.addEventListener("click", () => {
+        sessionStorage.removeItem("adminToken");
+        authToken = null;
+        allSubmissions = [];
+        showLogin();
+      });
+
+      // Load Submissions
+      async function loadSubmissions() {
+        showMessage(dashboardMessage, "⏳ Loading submissions...", "loading");
+
+        try {
+          const response = await fetch(`${API_URL}/api/admin/submissions`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            allSubmissions = result.submissions;
+            totalCount.textContent = allSubmissions.length;
+            displaySubmissions(allSubmissions);
+            hideMessage(dashboardMessage);
+          } else {
+            throw new Error(result.message);
+          }
+        } catch (error) {
+          console.error("Error loading submissions:", error);
+          showMessage(
+            dashboardMessage,
+            "❌ Failed to load submissions. Please try again.",
+            "error",
+          );
+        }
+      }
+
+      // Display Submissions
+      function displaySubmissions(submissions) {
+        if (submissions.length === 0) {
+          submissionsContainer.innerHTML = `
+                    <div class="no-submissions">
+                        <p>📭 No submissions found</p>
+                    </div>
+                `;
+          return;
+        }
+
+        const tableHTML = `
+                <table class="submissions-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>Rating</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${submissions
+                          .map(
+                            (sub) => `
+                            <tr>
+                                <td>${escapeHtml(sub.name)}</td>
+                                <td>${escapeHtml(sub.email)}</td>
+                                <td>${sub.contact ? escapeHtml(sub.contact) : "-"}</td>
+                                <td>
+                                    ${sub.rating ? `<span class="rating-stars">${"★".repeat(sub.rating)}${"☆".repeat(5 - sub.rating)}</span>` : "-"}
+                                </td>
+                                <td class="message-cell" title="${escapeHtml(sub.message)}">
+                                    ${escapeHtml(sub.message)}
+                                </td>
+                                <td class="date-cell">
+                                    ${new Date(sub.created_at).toLocaleString()}
+                                </td>
+                            </tr>
+                        `,
+                          )
+                          .join("")}
+                    </tbody>
+                </table>
+            `;
+
+        submissionsContainer.innerHTML = tableHTML;
+      }
+
+      // Search Handler
+      searchInput.addEventListener("input", (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filtered = allSubmissions.filter(
+          (sub) =>
+            sub.name.toLowerCase().includes(searchTerm) ||
+            sub.email.toLowerCase().includes(searchTerm) ||
+            sub.message.toLowerCase().includes(searchTerm) ||
+            (sub.contact && sub.contact.toLowerCase().includes(searchTerm)),
+        );
+        displaySubmissions(filtered);
+      });
+
+      // Utility function to escape HTML
+      function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = text;
+        return div.innerHTML;
+      }
+    </script>
+  </body>
+</html>

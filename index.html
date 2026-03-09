@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="sepia">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Love Quran</title>
+  <link rel="icon" type="image/png" href="src/assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <!-- Three.js for 3D Background -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+</head>
+
+<body>
+  <!-- Three.js Background Canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="app-container premium-layout">
+    <!-- Top Bar for branding and auth widget -->
+    <header class="top-header glass-panel">
+      <div class="logo">
+        <img src="src/assets/logo.png" alt="I Love Quran Logo" class="app-logo">
+        <h1>I Love Quran</h1>
+      </div>
+      <div id="topAuthWidget" class="top-auth"></div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="app-content" class="main-content with-bottom-nav">
+      <!-- Views will be rendered here -->
+    </main>
+
+    <!-- Global Player Bar (above bottom nav) -->
+    <div id="playerBar" class="player-bar hidden glass-panel">
+      <div class="player-info">
+        <span id="playerSurah" class="player-surah">Surah Name</span>
+        <span id="playerAyah" class="player-verse">Ayah 1</span>
+      </div>
+      <div class="player-controls">
+        <button id="playerPrev" class="player-btn">⏮</button>
+        <button id="playerPlay" class="player-btn play-circle">▶</button>
+        <button id="playerNext" class="player-btn">⏭</button>
+      </div>
+      <div class="player-progress-container">
+        <div id="playerProgress" class="player-progress-fill"></div>
+      </div>
+    </div>
+
+    <!-- Bottom Navigation Bar (Glassmorphism) -->
+    <nav class="bottom-nav glass-panel">
+      <a href="#search" class="nav-item active" data-link>
+        <span class="icon">🏠</span>
+        <span>Home</span>
+      </a>
+      <a href="#read" class="nav-item" data-link>
+        <span class="icon">🎧</span>
+        <span>Listen</span>
+      </a>
+      <a href="#holybook" class="nav-item" data-link>
+        <span class="icon">📖</span>
+        <span>Read</span>
+      </a>
+      <a href="#surahs" class="nav-item" data-link>
+        <span class="icon">📑</span>
+        <span>Surahs</span>
+      </a>
+      <a href="#auth" class="nav-item" data-link>
+        <span class="icon">👤</span>
+        <span>Profile</span>
+      </a>
+      <a href="#contact" class="nav-item" data-link>
+        <span class="icon">✉️</span>
+        <span>Contact</span>
+      </a>
+    </nav>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+
+</html>
